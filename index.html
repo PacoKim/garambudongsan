@@ -1061,7 +1061,34 @@
         </div>
     </footer>
 
-    <script>
+    <!-- Firebase SDK Scripts -->
+    <script type="importmap">
+    {
+      "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js",
+        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"
+      }
+    }
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "firebase/app";
+        import { getFirestore, collection, getDocs, query, orderBy, limit } from "firebase/firestore";
+
+        // Firebase 설정 (사용자 제공)
+        const firebaseConfig = {
+          apiKey: "AIzaSyC4bxl2efr-a2qlCv9zclP-kaL106Bpvxc",
+          authDomain: "garambudongsan.firebaseapp.com",
+          projectId: "garambudongsan",
+          storageBucket: "garambudongsan.firebasestorage.app",
+          messagingSenderId: "610338625520",
+          appId: "1:610338625520:web:7c113deb9334a302b62f35"
+        };
+
+        // Firebase 초기화
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
         // 구/동 선택 로직
         const dongData = {
             "동구": ["전체", "충장동", "동명동", "계림동", "산수동", "지산동", "서남동", "학동", "학운동", "지원동"],
@@ -1071,7 +1098,7 @@
             "광산구": ["전체", "송정동", "도산동", "신흥동", "어룡동", "우산동", "월곡동", "비아동", "첨단동", "신가동", "운남동", "수완동", "하남동", "임곡동", "동곡동", "평동", "삼도동", "본량동"]
         };
 
-        function updateDongs() {
+        window.updateDongs = function() {
             const guSelect = document.getElementById('gu-select');
             const dongSelect = document.getElementById('dong-select');
             const selectedGu = guSelect.value;
@@ -1098,10 +1125,10 @@
             }
         });
 
-        // Property Data (광주 핵심 매물 위주)
-        const properties = [
+        // Property Data (광주 핵심 매물 위주 - 기존 데이터 보존 용도)
+        const staticProperties = [
             {
-                id: 1,
+                id: "static_1",
                 badge: '매매',
                 badgeColor: '#0F172A',
                 image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
@@ -1111,10 +1138,10 @@
                 beds: 4,
                 baths: 2,
                 area: '165㎡ (50평)',
-                description: '광주의 강남으로 불리는 봉선동의 랜드마크 아파트입니다.\n뛰어난 학군을 자랑하며 단지 내 최고급 커뮤니티 시설이 완비되어 있습니다. 고층 세대로 무등산 조망권이 탁월하며, 대형 평수로 쾌적한 주거환경을 제공합니다.\n\n[주요 특징]\n- 봉선동 최고 명문 학군 배정\n- 전 세대 남향 위주 배치 (채광 우수)\n- 호텔식 로비 및 입주민 전용 라운지 운영'
+                description: '광주의 강남으로 불리는 봉선동의 랜드마크 아파트입니다.\n뛰어난 학군을 자랑하며 단지 내 최고급 커뮤니티 시설이 완비되어 있습니다.'
             },
             {
-                id: 2,
+                id: "static_2",
                 badge: '전세',
                 badgeColor: '#475569',
                 image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
@@ -1124,79 +1151,46 @@
                 beds: 4,
                 baths: 3,
                 area: '231㎡ (70평)',
-                description: '광주 최대 금융·상업 중심지 상무지구에 위치한 최고급 주상복합입니다.\n도보권 내 롯데마트, 상무국민체육센터 등 완벽한 인프라가 갖추어져 있습니다. 철저한 보안 시스템과 함께 프라이빗한 주거 라이프를 원하는 VIP 고객께 추천합니다.\n\n[주요 특징]\n- 24시간 철저한 출입 통제 및 프리미엄 보안 서비스\n- 천연 대리석 및 수입 주방가구 마감\n- 피트니스, 실내골프장, 북카페 등 럭셔리 커뮤니티'
-            },
-            {
-                id: 3,
-                badge: '분양중',
-                badgeColor: '#D4AF37',
-                image: 'https://images.unsplash.com/photo-1574362848149-11496d93a7c7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                price: '35억',
-                title: '광천동 호반써밋 펜트하우스',
-                address: '광주시 서구 광천동',
-                beds: 5,
-                baths: 3,
-                area: '280㎡ (85평)',
-                description: 'U-Square, 신세계백화점 바로 맞은편에 위치한 초광역 생활권 최고급 아파트입니다.\n해당 매물은 가장 꼭대기 층의 펜트하우스로, 광주 시내 전경을 파노라마로 감상할 수 있는 희소성 높은 매물입니다. 단독 야외 테라스가 포함되어 있습니다.\n\n[주요 특징]\n- 압도적인 희소가치의 펜트하우스 (단독 테라스)\n- 광주 신세계, 유스퀘어 터미널 도보 3분 초역세권\n- 스카이라운지 및 VIP 전용 엘리베이터 운영'
-            },
-            {
-                id: 4,
-                badge: '급매',
-                badgeColor: '#b91c1c',
-                image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                price: '18억',
-                title: '수완지구 호반베르디움 1차',
-                address: '광주시 광산구 수완동',
-                beds: 4,
-                baths: 2,
-                area: '160㎡ (48평)',
-                description: '광산구 최대 주거타운 수완지구의 프라임 입지에 위치한 대단지입니다.\n호수공원 조망이 가능해 여유로운 삶을 누릴 수 있습니다. 인근에 명진고와 수완초가 위치해 아이들 키우기 좋은 최적의 환경을 제공합니다.\n\n[주요 특징]\n- 수완호수공원 영구 조망권 확보\n- 지상에 차가 없는 친환경 공원형 단지\n- 주변 대형마트, 아울렛 등 생활 인프라 완벽'
-            },
-            {
-                id: 5,
-                badge: '매매',
-                badgeColor: '#0F172A',
-                image: 'https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                price: '16억',
-                title: '계림동 그랜드센트럴',
-                address: '광주시 동구 계림동',
-                beds: 4,
-                baths: 2,
-                area: '135㎡ (41평)',
-                description: '구도심 르네상스를 이끄는 동구 신흥 대단지 최고급 아파트입니다.\n광주역과 금남로가 가까워 이동이 편리하며, 대형 백화점(롯데백화점) 등의 구도심 인프라를 그대로 이용할 수 있습니다. 최신형 스마트홈 기기가 도입되어 있습니다.\n\n[주요 특징]\n- 지하철 및 광주역 접근성이 뛰어난 교통 결절점\n- 단지 내 축구장 규모의 초대형 중앙 광장\n- 전열교환기, 홈네트워크 등 최첨단 시스템'
-            },
-            {
-                id: 6,
-                badge: '전세',
-                badgeColor: '#475569',
-                image: 'https://images.unsplash.com/photo-1502672260266-1c1de2d93688?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                price: '12억',
-                title: '무등산 자이 앤 어울림',
-                address: '광주시 북구 우산동',
-                beds: 3,
-                baths: 2,
-                area: '115㎡ (35평)',
-                description: '장대한 무등산을 품어 도심 속 자연을 만끽하기에 더할 나위 없는 자이(Xi) 그레이드 아파트입니다.\n미세먼지 차단 시스템과 최첨단 공기청정 시스템이 적용되어 있으며, 광주병원, 말바우시장 등 구도심 생활권과 이마트 등 신도심 인프라 모두 접근이 용이합니다.\n\n[주요 특징]\n- 무등산국립공원을 집 안에서 즐기는 청정 입지\n- 프리미엄 자이안 센터(사우나, 골프장 등) 입점\n- 에너지 절감 시스템 및 스마트 주차 유도 시스템'
+                description: '광주 최대 금융·상업 중심지 상무지구에 위치한 최고급 주상복합입니다.'
             }
         ];
 
-        // Render Properties
+        let allProperties = []; // Firestore + Static
+
+        // Render Properties from Firestore
         const grid = document.getElementById('property-grid');
         
-        function renderProperties() {
-            grid.innerHTML = '';
-            
-            // 기본 매물 + 커스텀 매물 합치기
-            const customProperties = JSON.parse(localStorage.getItem('garam_custom_properties') || '[]');
-            const allProperties = [...customProperties, ...properties];
+        async function loadAllContent() {
+            // 1. 매물 불러오기
+            try {
+                const propQuery = query(collection(db, "properties"), orderBy("createdAt", "desc"));
+                const propSnap = await getDocs(propQuery);
+                
+                const cloudProperties = [];
+                propSnap.forEach(doc => {
+                    cloudProperties.push({ ...doc.data(), id: doc.id });
+                });
 
-            allProperties.forEach(prop => {
+                allProperties = [...cloudProperties, ...staticProperties];
+                renderGrid(allProperties);
+            } catch (e) {
+                console.error("Properties load error:", e);
+                renderGrid(staticProperties);
+            }
+
+            // 2. 최신 블로그 글 불러오기
+            renderRecentPosts();
+        }
+
+        function renderGrid(props) {
+            grid.innerHTML = '';
+            props.forEach(prop => {
                 const addressHTML = prop.address ? `<p class="address"><i class="fa-solid fa-location-dot"></i> ${prop.address}</p>` : '';
                 const cardHTML = `
-                    <div class="card" onclick="openModal(${prop.id})">
+                    <div class="card" onclick="openModal('${prop.id}')">
                         <div class="badge" style="background-color: ${prop.badgeColor || '#0F172A'}">${prop.badge}</div>
                         <div class="card-img-wrapper">
-                            <img src="${prop.image}" alt="${prop.title}" class="card-img">
+                            <img src="${prop.image}" alt="${prop.title}" class="card-img" onerror="this.src='https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
                         </div>
                         <div class="card-content">
                             <div class="price">${prop.price}</div>
@@ -1214,23 +1208,45 @@
             });
         }
 
-        renderProperties();
+        async function renderRecentPosts() {
+            const blogGrid = document.getElementById('blog-home-grid');
+            if(!blogGrid) return;
+
+            try {
+                const blogQuery = query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(3));
+                const blogSnap = await getDocs(blogQuery);
+                
+                if(!blogSnap.empty) {
+                    blogGrid.innerHTML = ''; // 기본 정적 데이터 제거
+                    blogSnap.forEach(fbDoc => {
+                        const p = fbDoc.data();
+                        blogGrid.innerHTML += `
+                            <article class="blog-card">
+                                <img src="${p.image}" alt="${p.title}" onerror="this.src='https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'">
+                                <div class="blog-card-content">
+                                    <span class="blog-category">${p.category}</span>
+                                    <h3>${p.title}</h3>
+                                    <p>${p.excerpt}</p>
+                                    <a href="blog-detail.html?fbid=${fbDoc.id}" class="blog-more">상세보기 <i class="fa-solid fa-arrow-right"></i></a>
+                                </div>
+                            </article>
+                        `;
+                    });
+                }
+            } catch(e) { console.error("Recent posts load error:", e); }
+        }
 
         // Modal Logic
         const modal = document.getElementById('property-modal');
         
-        function openModal(id) {
-            // 기본 매물 + 커스텀 매물에서 찾기
-            const customProperties = JSON.parse(localStorage.getItem('garam_custom_properties') || '[]');
-            const allProperties = [...customProperties, ...properties];
+        window.openModal = function(id) {
             const prop = allProperties.find(p => p.id === id);
-            
             if(prop) {
                 document.getElementById('modal-img').src = prop.image;
                 document.getElementById('modal-badge').innerText = prop.badge;
                 document.getElementById('modal-badge').style.backgroundColor = prop.badgeColor;
                 document.getElementById('modal-title').innerText = prop.title;
-                document.getElementById('modal-address').innerText = prop.address;
+                document.getElementById('modal-address').innerText = prop.address || '정보 없음';
                 document.getElementById('modal-price').innerText = prop.price;
                 document.getElementById('modal-price-type').innerText = prop.badge.includes('전세') ? '전세가' : '매매가';
                 
@@ -1245,17 +1261,22 @@
             }
         }
 
-        function closeModal() {
+        window.closeModal = function() {
             modal.classList.remove('active');
             document.body.classList.remove('modal-open');
         }
 
-        // Close modal when clicking outside of it
         modal.addEventListener('click', (e) => {
             if(e.target === modal) {
-                closeModal();
+                window.closeModal();
             }
         });
+
+        // Start loading
+        loadAllContent();
+
     </script>
+</body>
+</html>
 </body>
 </html>

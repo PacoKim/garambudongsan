@@ -491,58 +491,79 @@
         </div>
     </footer>
 
-    <script>
-        // Post Management
+    <!-- Firebase SDK Scripts -->
+    <script type="importmap">
+    {
+      "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js",
+        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"
+      }
+    }
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "firebase/app";
+        import { getFirestore, collection, getDocs, query, orderBy } from "firebase/firestore";
+
+        // Firebase 설정 (사용자 제공)
+        const firebaseConfig = {
+          apiKey: "AIzaSyC4bxl2efr-a2qlCv9zclP-kaL106Bpvxc",
+          authDomain: "garambudongsan.firebaseapp.com",
+          projectId: "garambudongsan",
+          storageBucket: "garambudongsan.firebasestorage.app",
+          messagingSenderId: "610338625520",
+          appId: "1:610338625520:web:7c113deb9334a302b62f35"
+        };
+
+        // Firebase 초기화
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // UI Elements
         const dynamicPostsContainer = document.getElementById('dynamic-posts');
 
         // Load posts on startup
         document.addEventListener('DOMContentLoaded', loadPosts);
 
-        function savePost(post) {
-            let posts = JSON.parse(localStorage.getItem('garam_posts') || '[]');
-            posts.unshift(post); // 새 글을 맨 위로
-            localStorage.setItem('garam_posts', JSON.stringify(posts));
-        }
+        async function loadPosts() {
+            dynamicPostsContainer.innerHTML = '<p style="text-align:center; padding: 40px;">불러오는 중...</p>';
+            
+            try {
+                // Firestore에서 'posts' 컬렉션 가져오기 (최신순 정렬)
+                const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+                const querySnapshot = await getDocs(q);
+                
+                dynamicPostsContainer.innerHTML = ''; // 초기화
 
-        function loadPosts() {
-            const posts = JSON.parse(localStorage.getItem('garam_posts') || '[]');
-            dynamicPostsContainer.innerHTML = '';
-            const isAdmin = sessionStorage.getItem('isAdmin') === 'true';
+                if (querySnapshot.empty) {
+                    dynamicPostsContainer.innerHTML = '<p style="text-align:center; padding: 40px; color: var(--text-light);">등록된 게시글이 아직 없습니다.</p>';
+                    return;
+                }
 
-            if(isAdmin) {
-                document.getElementById('admin-controls').style.display = 'flex';
-            }
-
-            posts.forEach(post => {
-                const deleteBtn = isAdmin ? `<button class="delete-btn" onclick="deletePost(${post.id})"><i class="fa-solid fa-trash"></i> 삭제</button>` : '';
-                const postHTML = `
-                    <article class="blog-post" id="post-${post.id}">
-                        <img src="${post.image}" alt="${post.title}">
-                        <div class="post-content">
-                            <div class="post-meta">
-                                <span><i class="fa-solid fa-calendar"></i> ${post.date}</span>
-                                <span><i class="fa-solid fa-user"></i> ${post.author}</span>
-                                <span><i class="fa-solid fa-tag"></i> ${post.category}</span>
+                querySnapshot.forEach((doc) => {
+                    const post = doc.data();
+                    const postHTML = `
+                        <article class="blog-post">
+                            <img src="${post.image}" alt="${post.title}" onerror="this.src='https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80'">
+                            <div class="post-content">
+                                <div class="post-meta">
+                                    <span><i class="fa-solid fa-calendar"></i> ${post.date}</span>
+                                    <span><i class="fa-solid fa-user"></i> ${post.author}</span>
+                                    <span><i class="fa-solid fa-tag"></i> ${post.category}</span>
+                                </div>
+                                <h2 class="post-title">${post.title}</h2>
+                                <p class="post-excerpt">${post.excerpt}</p>
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <a href="blog-detail.html?fbid=${doc.id}" class="read-more">계속 읽기 (본문 보기) <i class="fa-solid fa-arrow-right"></i></a>
+                                </div>
                             </div>
-                            <h2 class="post-title">${post.title}</h2>
-                            <p class="post-excerpt">${post.excerpt}</p>
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <a href="blog-detail.html?id=${post.id}" class="read-more">계속 읽기 (본문 보기) <i class="fa-solid fa-arrow-right"></i></a>
-                                ${deleteBtn}
-                            </div>
-                        </div>
-                    </article>
-                `;
-                dynamicPostsContainer.innerHTML += postHTML;
-            });
-        }
-
-        function deletePost(id) {
-            if(confirm('정말로 이 포스트를 삭제하시겠습니까?')) {
-                let posts = JSON.parse(localStorage.getItem('garam_posts') || '[]');
-                posts = posts.filter(p => p.id !== id);
-                localStorage.setItem('garam_posts', JSON.stringify(posts));
-                loadPosts();
+                        </article>
+                    `;
+                    dynamicPostsContainer.innerHTML += postHTML;
+                });
+            } catch (error) {
+                console.error("Error loading posts: ", error);
+                dynamicPostsContainer.innerHTML = '<p style="text-align:center; padding: 40px; color: red;">게시글을 불러오는 중 오류가 발생했습니다.</p>';
             }
         }
     </script>

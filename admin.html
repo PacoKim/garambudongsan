@@ -187,9 +187,34 @@
         </div>
     </div>
 
-    <!-- Quill.js Editor JS -->
-    <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-    <script>
+    <!-- Firebase SDK Scripts -->
+    <script type="importmap">
+    {
+      "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js",
+        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"
+      }
+    }
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "firebase/app";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy } from "firebase/firestore";
+
+        // Firebase 설정 (사용자 제공)
+        const firebaseConfig = {
+          apiKey: "AIzaSyC4bxl2efr-a2qlCv9zclP-kaL106Bpvxc",
+          authDomain: "garambudongsan.firebaseapp.com",
+          projectId: "garambudongsan",
+          storageBucket: "garambudongsan.firebasestorage.app",
+          messagingSenderId: "610338625520",
+          appId: "1:610338625520:web:7c113deb9334a302b62f35"
+        };
+
+        // Firebase 초기화
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
         // Quill Editor 초기화
         const quill = new Quill('#blog-editor', {
             theme: 'snow',
@@ -205,19 +230,19 @@
             }
         });
 
-        // Auth Check (실제 서비스 시에는 서버 측 인증 필요)
+        // Auth Check
         if(sessionStorage.getItem('isAdmin') !== 'true') {
             window.location.href = 'admin-login.html';
         } else {
             document.getElementById('auth-check').style.display = 'block';
         }
 
-        function logout() {
+        window.logout = function() {
             sessionStorage.removeItem('isAdmin');
             window.location.href = 'index.html';
         }
 
-        function switchTab(type) {
+        window.switchTab = function(type) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             if(type === 'property') {
@@ -229,8 +254,8 @@
             }
         }
 
-        // Image Preview and Base64 conversion
-        function previewImage(input) {
+        // Image Preview logic
+        window.previewImage = function(input) {
             const preview = document.getElementById('p-preview');
             const hiddenInput = document.getElementById('p-image-base64');
             if (input.files && input.files[0]) {
@@ -243,8 +268,7 @@
             }
         }
 
-        // Blog Image Preview
-        function previewBlogImage(input) {
+        window.previewBlogImage = function(input) {
             const preview = document.getElementById('b-preview');
             const hiddenInput = document.getElementById('b-image-base64');
             if (input.files && input.files[0]) {
@@ -257,8 +281,7 @@
             }
         }
 
-        // Area Live Update logic (Normalized)
-        function liveUpdateArea(val) {
+        window.liveUpdateArea = function(val) {
             const resSpan = document.getElementById('p-area-res');
             if(!val) {
                 resSpan.innerText = '㎡ (0평)';
@@ -271,7 +294,7 @@
 
         // Property Management
         const propForm = document.getElementById('property-form');
-        propForm.addEventListener('submit', (e) => {
+        propForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const imageBase64 = document.getElementById('p-image-base64').value;
@@ -286,9 +309,9 @@
 
             const dealType = document.getElementById('p-deal-type').value;
             const badgeColorMap = {
-                '매매': '#0F172A', // 다크 네이비
-                '전세': '#475569', // 그레이
-                '월세': '#D4AF37'  // 골드
+                '매매': '#0F172A',
+                '전세': '#475569',
+                '월세': '#D4AF37'
             };
 
             const newProp = {
@@ -297,19 +320,18 @@
                 badgeColor: badgeColorMap[dealType] || '#0F172A',
                 image: imageBase64,
                 title: document.getElementById('p-title').value,
-                address: '', // 주소 항목 제거에 따른 빈 값 처리
+                address: '', 
                 price: document.getElementById('p-price').value,
                 type: document.getElementById('p-type').value,
                 beds: document.getElementById('p-beds').value,
                 baths: document.getElementById('p-baths').value,
                 area: areaFullStr,
-                description: document.getElementById('p-desc').value
+                description: document.getElementById('p-desc').value,
+                createdAt: new Date()
             };
-            let props = JSON.parse(localStorage.getItem('garam_custom_properties') || '[]');
-            props.unshift(newProp);
-            
+
             try {
-                localStorage.setItem('garam_custom_properties', JSON.stringify(props));
+                await addDoc(collection(db, "properties"), newProp);
                 propForm.reset();
                 document.getElementById('p-preview').innerHTML = '<span style="color:#94a3b8; font-size: 12px;">선택된 이미지 없음</span>';
                 document.getElementById('p-area-res').innerText = '㎡ (0평)';
@@ -317,13 +339,13 @@
                 alert('매물이 성공적으로 등록되었습니다.');
             } catch (error) {
                 console.error(error);
-                alert('데이터 저장 중 오류가 발생했습니다. 이미지 용량이 너무 클 수 있습니다.');
+                alert('데이터 저장 중 오류가 발생했습니다.');
             }
         });
 
         // Blog Management
         const blogForm = document.getElementById('blog-form');
-        blogForm.addEventListener('submit', (e) => {
+        blogForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const imageBase64 = document.getElementById('b-image-base64').value;
@@ -340,59 +362,73 @@
                 author: document.getElementById('b-author').value,
                 date: new Date().toLocaleDateString('ko-KR').replace(/ /g, ''),
                 excerpt: document.getElementById('b-excerpt').value,
-                content: quill.root.innerHTML // Quill 에디터의 HTML 내용 저장
+                content: quill.root.innerHTML,
+                createdAt: new Date()
             };
-            let posts = JSON.parse(localStorage.getItem('garam_posts') || '[]');
-            posts.unshift(newPost);
 
             try {
-                localStorage.setItem('garam_posts', JSON.stringify(posts));
+                await addDoc(collection(db, "posts"), newPost);
                 blogForm.reset();
-                quill.setContents([]); // 에디터 초기화
+                quill.setContents([]);
                 document.getElementById('b-preview').innerHTML = '<span style="color:#94a3b8; font-size: 12px;">선택된 이미지 없음</span>';
                 renderLists();
                 alert('블로그 포스트가 성공적으로 등록되었습니다.');
             } catch (error) {
                 console.error(error);
-                alert('데이터 저장 중 오류가 발생했습니다. 이미지 용량이 너무 클 수 있습니다.');
+                alert('데이터 저장 중 오류가 발생했습니다.');
             }
         });
 
-        function renderLists() {
+        async function renderLists() {
             // Render Props
             const propList = document.getElementById('property-list');
-            const customProps = JSON.parse(localStorage.getItem('garam_custom_properties') || '[]');
-            propList.innerHTML = customProps.length ? '' : '<p>등록된 커스텀 매물이 없습니다.</p>';
-            customProps.forEach(p => {
-                propList.innerHTML += `
-                    <div class="list-item">
-                        <div class="list-item-info"><h4>${p.title}</h4><p>${p.area} | ${p.price}</p></div>
-                        <button class="btn-delete" onclick="deleteItem('property', ${p.id})">삭제</button>
-                    </div>
-                `;
-            });
+            propList.innerHTML = '로딩 중...';
+            try {
+                const propQuery = query(collection(db, "properties"), orderBy("createdAt", "desc"));
+                const propSnap = await getDocs(propQuery);
+                propList.innerHTML = propSnap.empty ? '<p>등록된 매물이 없습니다.</p>' : '';
+                propSnap.forEach((fbDoc) => {
+                    const p = fbDoc.data();
+                    const docId = fbDoc.id;
+                    propList.innerHTML += `
+                        <div class="list-item">
+                            <div class="list-item-info"><h4>${p.title}</h4><p>${p.area} | ${p.price}</p></div>
+                            <button class="btn-delete" onclick="deleteItem('property', '${docId}')">삭제</button>
+                        </div>
+                    `;
+                });
+            } catch(e) { console.error(e); propList.innerHTML = '불러오기 실패'; }
 
             // Render Blog
             const blogList = document.getElementById('blog-list');
-            const customPosts = JSON.parse(localStorage.getItem('garam_posts') || '[]');
-            blogList.innerHTML = customPosts.length ? '' : '<p>등록된 커스텀 포스트가 없습니다.</p>';
-            customPosts.forEach(p => {
-                blogList.innerHTML += `
-                    <div class="list-item">
-                        <div class="list-item-info"><h4>${p.title}</h4><p>${p.date} | ${p.author}</p></div>
-                        <button class="btn-delete" onclick="deleteItem('blog', ${p.id})">삭제</button>
-                    </div>
-                `;
-            });
+            blogList.innerHTML = '로딩 중...';
+            try {
+                const blogQuery = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+                const blogSnap = await getDocs(blogQuery);
+                blogList.innerHTML = blogSnap.empty ? '<p>등록된 포스트가 없습니다.</p>' : '';
+                blogSnap.forEach((fbDoc) => {
+                    const p = fbDoc.data();
+                    const docId = fbDoc.id;
+                    blogList.innerHTML += `
+                        <div class="list-item">
+                            <div class="list-item-info"><h4>${p.title}</h4><p>${p.date} | ${p.author}</p></div>
+                            <button class="btn-delete" onclick="deleteItem('blog', '${docId}')">삭제</button>
+                        </div>
+                    `;
+                });
+            } catch(e) { console.error(e); blogList.innerHTML = '불러오기 실패'; }
         }
 
-        function deleteItem(type, id) {
+        window.deleteItem = async function(type, docId) {
             if(!confirm('정말로 삭제하시겠습니까?')) return;
-            const key = type === 'property' ? 'garam_custom_properties' : 'garam_posts';
-            let items = JSON.parse(localStorage.getItem(key) || '[]');
-            items = items.filter(item => item.id !== id);
-            localStorage.setItem(key, JSON.stringify(items));
-            renderLists();
+            const collectionName = type === 'property' ? 'properties' : 'posts';
+            try {
+                await deleteDoc(doc(db, collectionName, docId));
+                renderLists();
+            } catch (error) {
+                console.error(error);
+                alert('삭제 중 오류가 발생했습니다.');
+            }
         }
 
         renderLists();

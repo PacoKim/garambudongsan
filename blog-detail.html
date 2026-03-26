@@ -257,37 +257,72 @@
         </div>
     </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // URL에서 ?id= 파라미터 가져오기
-            const urlParams = new URLSearchParams(window.location.search);
-            const postIdStr = urlParams.get('id');
-            const postId = parseInt(postIdStr, 10);
+    <!-- Firebase SDK Scripts -->
+    <script type="importmap">
+    {
+      "imports": {
+        "firebase/app": "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js",
+        "firebase/firestore": "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"
+      }
+    }
+    </script>
 
-            if (!postId) {
+    <script type="module">
+        import { initializeApp } from "firebase/app";
+        import { getFirestore, doc, getDoc } from "firebase/firestore";
+
+        // Firebase 설정 (사용자 제공)
+        const firebaseConfig = {
+          apiKey: "AIzaSyC4bxl2efr-a2qlCv9zclP-kaL106Bpvxc",
+          authDomain: "garambudongsan.firebaseapp.com",
+          projectId: "garambudongsan",
+          storageBucket: "garambudongsan.firebasestorage.app",
+          messagingSenderId: "610338625520",
+          appId: "1:610338625520:web:7c113deb9334a302b62f35"
+        };
+
+        // Firebase 초기화
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            // URL에서 ?fbid= 파라미터 가져오기 (Firestore Document ID)
+            const urlParams = new URLSearchParams(window.location.search);
+            const fbDocId = urlParams.get('fbid');
+
+            if (!fbDocId) {
+                // 이전 방식(id) 호환성 유지 시도 (필요한 경우)
                 document.getElementById('postError').style.display = 'block';
                 return;
             }
 
-            // LocalStorage에서 포스트 찾기
-            const posts = JSON.parse(localStorage.getItem('garam_posts') || '[]');
-            const post = posts.find(p => p.id === postId);
+            try {
+                // Firestore에서 특정 문서 가져오기
+                const docRef = doc(db, "posts", fbDocId);
+                const docSnap = await getDoc(docRef);
 
-            if (post) {
-                // 데이터 채우기
-                document.getElementById('detailCategory').textContent = post.category;
-                document.getElementById('detailTitle').textContent = post.title;
-                document.getElementById('detailDate').textContent = post.date;
-                document.getElementById('detailAuthor').textContent = post.author;
-                
-                // HTML 본문 바로 렌더링
-                // 이전 모달 방식에서는 content가 없었으므로 예외 처리
-                document.getElementById('detailContent').innerHTML = post.content || `<p>${post.excerpt}</p><p style="color:red">[초기 버전에서 작성되어 본문 데이터가 부족합니다]</p>`;
-                
-                // 영역 표시
-                document.getElementById('postContentArea').style.display = 'block';
-            } else {
+                if (docSnap.exists()) {
+                    const post = docSnap.data();
+                    
+                    // 데이터 채우기
+                    document.getElementById('detailCategory').textContent = post.category;
+                    document.getElementById('detailTitle').textContent = post.title;
+                    document.getElementById('detailDate').textContent = post.date;
+                    document.getElementById('detailAuthor').textContent = post.author;
+                    
+                    // HTML 본문 바로 렌더링
+                    document.getElementById('detailContent').innerHTML = post.content || `<p>${post.excerpt}</p>`;
+                    
+                    // 영역 표시
+                    document.getElementById('postContentArea').style.display = 'block';
+                } else {
+                    document.getElementById('postError').style.display = 'block';
+                    document.getElementById('postError').textContent = "게시글이 존재하지 않거나 삭제되었습니다.";
+                }
+            } catch (error) {
+                console.error("Error fetching post:", error);
                 document.getElementById('postError').style.display = 'block';
+                document.getElementById('postError').textContent = "데이터를 불러오는 중 오류가 발생했습니다.";
             }
         });
     </script>
