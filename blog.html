@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>가람부동산 블로그 | 부동산 시장 동향 및 매물 인사이트</title>
+    <title>가람부동산</title>
     <meta name="description" content="가람부동산이 전해드리는 생생한 부동산 시장 뉴스. 광주 남구 봉선동 아파트 시세 정보 및 전문가의 인사이트를 확인하세요.">
     <meta name="keywords" content="부동산뉴스, 봉선동아파트시세, 광주부동산전망, 가람부동산블로그, 부동산투자정보">
     
     <!-- 오픈 그래프 (소셜 공유용) -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="가람부동산 블로그 | 부동산 시장 동향 및 인사이트">
+    <meta property="og:title" content="가람부동산">
     <meta property="og:description" content="광주 봉선동 부동산의 모든 것. 가람부동산 블로그에서 확인하세요.">
     <meta property="og:image" content="https://pacokim.github.io/garambudongsan/images/og-image.jpg">
     <meta property="og:url" content="https://pacokim.github.io/garambudongsan/blog.html">
@@ -465,32 +465,15 @@
         <aside class="sidebar">
             <div class="widget">
                 <h4>카테고리</h4>
-                <ul class="category-list">
-                    <li>시장 분석 <span>(12)</span></li>
-                    <li>매물 가이드 <span>(8)</span></li>
-                    <li>투자 정보 <span>(15)</span></li>
-                    <li>인테리어 <span>(6)</span></li>
-                    <li>공지사항 <span>(3)</span></li>
+                <ul class="category-list" id="category-list">
+                    <!-- Dynamic categories -->
                 </ul>
             </div>
 
             <div class="widget">
                 <h4>최신 게시글</h4>
-                <div class="recent-posts">
-                    <div class="recent-post-item">
-                        <img src="https://images.unsplash.com/photo-1448630360428-65ff2c0257ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Recent 1">
-                        <div class="recent-post-info">
-                            <h5>펜트하우스 투자의 모든 것</h5>
-                            <span>2024.03.18</span>
-                        </div>
-                    </div>
-                    <div class="recent-post-item">
-                        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Recent 2">
-                        <div class="recent-post-info">
-                            <h5>광주 신규 분양 단지 분석</h5>
-                            <span>2024.03.12</span>
-                        </div>
-                    </div>
+                <div class="recent-posts" id="recent-posts">
+                    <!-- Dynamic recent posts -->
                 </div>
             </div>
         </aside>
@@ -539,50 +522,106 @@
 
         // UI Elements
         const dynamicPostsContainer = document.getElementById('dynamic-posts');
+        const categoryListContainer = document.getElementById('category-list');
+        const recentPostsContainer = document.getElementById('recent-posts');
 
         // Load posts on startup
-        document.addEventListener('DOMContentLoaded', loadPosts);
+        document.addEventListener('DOMContentLoaded', loadBlogData);
 
-        async function loadPosts() {
+        async function loadBlogData() {
             dynamicPostsContainer.innerHTML = '<p style="text-align:center; padding: 40px;">불러오는 중...</p>';
             
             try {
-                // Firestore에서 'posts' 컬렉션 가져오기 (최신순 정렬)
+                // Fetch all posts (for categories and counts)
                 const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
                 const querySnapshot = await getDocs(q);
                 
-                dynamicPostsContainer.innerHTML = ''; // 초기화
-
-                if (querySnapshot.empty) {
-                    dynamicPostsContainer.innerHTML = '<p style="text-align:center; padding: 40px; color: var(--text-light);">등록된 게시글이 아직 없습니다.</p>';
-                    return;
-                }
-
+                const posts = [];
                 querySnapshot.forEach((doc) => {
-                    const post = doc.data();
-                    const postHTML = `
-                        <article class="blog-post">
-                            <img src="${post.image}" alt="${post.title}" onerror="this.src='https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80'">
-                            <div class="post-content">
-                                <div class="post-meta">
-                                    <span><i class="fa-solid fa-calendar"></i> ${post.date}</span>
-                                    <span><i class="fa-solid fa-user"></i> ${post.author}</span>
-                                    <span><i class="fa-solid fa-tag"></i> ${post.category}</span>
-                                </div>
-                                <h2 class="post-title">${post.title}</h2>
-                                <p class="post-excerpt">${post.excerpt}</p>
-                                <div style="display: flex; justify-content: space-between; align-items: center;">
-                                    <a href="blog-detail.html?fbid=${doc.id}" class="read-more">계속 읽기 (본문 보기) <i class="fa-solid fa-arrow-right"></i></a>
-                                </div>
-                            </div>
-                        </article>
-                    `;
-                    dynamicPostsContainer.innerHTML += postHTML;
+                    posts.push({ id: doc.id, ...doc.data() });
                 });
+
+                // 1. Render Main Post List
+                renderPosts(posts);
+
+                // 2. Render Sidebar: Categories
+                renderCategories(posts);
+
+                // 3. Render Sidebar: Recent Posts (Top 5)
+                renderRecentPosts(posts.slice(0, 5));
+
             } catch (error) {
-                console.error("Error loading posts: ", error);
+                console.error("Error loading blog data: ", error);
                 dynamicPostsContainer.innerHTML = '<p style="text-align:center; padding: 40px; color: red;">게시글을 불러오는 중 오류가 발생했습니다.</p>';
             }
+        }
+
+        function renderPosts(posts) {
+            dynamicPostsContainer.innerHTML = ''; 
+            if (posts.length === 0) {
+                dynamicPostsContainer.innerHTML = '<p style="text-align:center; padding: 40px; color: var(--text-light);">등록된 게시글이 아직 없습니다.</p>';
+                return;
+            }
+
+            posts.forEach((post) => {
+                const postHTML = `
+                    <article class="blog-post">
+                        <img src="${post.image}" alt="${post.title}" onerror="this.src='https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80'">
+                        <div class="post-content">
+                            <div class="post-meta">
+                                <span><i class="fa-solid fa-calendar"></i> ${post.date}</span>
+                                <span><i class="fa-solid fa-user"></i> ${post.author}</span>
+                                <span><i class="fa-solid fa-tag"></i> ${post.category}</span>
+                            </div>
+                            <h2 class="post-title">${post.title}</h2>
+                            <p class="post-excerpt">${post.excerpt}</p>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <a href="blog-detail.html?fbid=${post.id}" class="read-more">계속 읽기 (본문 보기) <i class="fa-solid fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </article>
+                `;
+                dynamicPostsContainer.innerHTML += postHTML;
+            });
+        }
+
+        function renderCategories(posts) {
+            const categoriesMap = {};
+            posts.forEach(post => {
+                const cat = post.category || '기타';
+                categoriesMap[cat] = (categoriesMap[cat] || 0) + 1;
+            });
+
+            categoryListContainer.innerHTML = '';
+            Object.keys(categoriesMap).sort().forEach(cat => {
+                const li = document.createElement('li');
+                li.innerHTML = `${cat} <span>(${categoriesMap[cat]})</span>`;
+                li.onclick = () => filterByCategory(cat);
+                categoryListContainer.appendChild(li);
+            });
+        }
+
+        function renderRecentPosts(recentPosts) {
+            recentPostsContainer.innerHTML = '';
+            recentPosts.forEach(post => {
+                const itemHTML = `
+                    <div class="recent-post-item" style="cursor:pointer;" onclick="window.location.href='blog-detail.html?fbid=${post.id}'">
+                        <img src="${post.image}" alt="${post.title}" onerror="this.src='https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80'">
+                        <div class="recent-post-info">
+                            <h5>${post.title}</h5>
+                            <span>${post.date}</span>
+                        </div>
+                    </div>
+                `;
+                recentPostsContainer.innerHTML += itemHTML;
+            });
+        }
+
+        function filterByCategory(category) {
+            // Optional: Implement filtering if desired, or just alert/log for now as per minimal requirement
+            console.log(`Filtering by category: ${category}`);
+            // To implement filtering, you could re-call renderPosts with filtered array
+            // For now, staying simple as requested.
         }
     </script>
 </body>
