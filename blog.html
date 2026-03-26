@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>가람부동산 | 블로그 & 인사이트</title>
+    <!-- 폰트: Pretendard -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <!-- 아이콘: FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #0F172A; /* 다크 네이비 */
+            --accent-color: #D4AF37; /* 고급스러운 골드 */
+            --bg-color: #F8FAFC; /* 아주 밝은 쿨그레이 */
+            --text-main: #1E293B; /* 짙은 그레이 */
+            --text-light: #64748B; /* 중간 그레이 */
+            --white: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Pretendard', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        li {
+            list-style: none;
+        }
+
+        /* Header (Same as index.html) */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 80px;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5%;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--primary-color);
+            letter-spacing: 2px;
+        }
+
+        .logo span {
+            color: var(--accent-color);
+        }
+
+        nav ul {
+            display: flex;
+            gap: 40px;
+        }
+
+        nav a {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-main);
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--accent-color);
+        }
+
+        .btn-contact {
+            padding: 10px 24px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        /* Blog Header */
+        .blog-header {
+            padding: 160px 5% 80px;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #1e293b 100%);
+            color: var(--white);
+            text-align: center;
+        }
+
+        .blog-header h1 {
+            font-size: 42px;
+            margin-bottom: 15px;
+        }
+
+        .blog-header p {
+            color: #cbd5e1;
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Blog Content */
+        .container {
+            max-width: 1200px;
+            margin: 60px auto;
+            padding: 0 5%;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 40px;
+        }
+
+        .blog-list {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .blog-post {
+            background: var(--white);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .blog-post:hover {
+            transform: translateY(-5px);
+        }
+
+        .blog-post img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+        }
+
+        .post-content {
+            padding: 30px;
+        }
+
+        .post-meta {
+            font-size: 14px;
+            color: var(--text-light);
+            margin-bottom: 15px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .post-meta span i {
+            margin-right: 5px;
+            color: var(--accent-color);
+        }
+
+        .post-title {
+            font-size: 28px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .post-excerpt {
+            color: var(--text-light);
+            margin-bottom: 25px;
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .read-more {
+            color: var(--accent-color);
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .widget {
+            background: var(--white);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .widget h4 {
+            font-size: 18px;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent-color);
+            padding-left: 15px;
+        }
+
+        .category-list li {
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 15px;
+            transition: color 0.3s;
+            cursor: pointer;
+        }
+
+        .category-list li:hover {
+            color: var(--accent-color);
+        }
+
+        .recent-posts {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .recent-post-item {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .recent-post-item img {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .recent-post-info h5 {
+            font-size: 14px;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .recent-post-info span {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        /* Footer (Same as index.html) */
+        footer {
+            background-color: #0b1120;
+            color: #94a3b8;
+            padding: 80px 5% 40px;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .footer-col h4 {
+            color: var(--white);
+            margin-bottom: 20px;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+
+        /* 게시글 관리 도구 스타일 */
+        .admin-controls {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn-write {
+            padding: 12px 25px;
+            background-color: var(--accent-color);
+            color: var(--white);
+            border-radius: 8px;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+            transition: all 0.3s;
+        }
+
+        .btn-write:hover {
+            background-color: #b8962d;
+            transform: translateY(-2px);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        .form-group textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        .btn-save {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-save:hover {
+            background-color: #1e293b;
+        }
+
+        .delete-btn {
+            background: #fee2e2;
+            color: #ef4444;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            .blog-header h1 {
+                font-size: 32px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header id="header">
+        <a href="index.html" class="logo">가람부동산<span>.</span></a>
+        <nav>
+            <ul>
+                <li><a href="index.html#hero">홈</a></li>
+                <li><a href="index.html#featured">매물 검색</a></li>
+                <li><a href="index.html#about">중개사 소개</a></li>
+                <li><a href="blog.html">블로그</a></li>
+            </ul>
+        </nav>
+        <a href="index.html#contact" class="btn-contact">상담 예약</a>
+    </header>
+
+    <!-- Blog Header -->
+    <section class="blog-header">
+        <h1>부동산 인사이트</h1>
+        <p>광주 프리미엄 부동산 시장의 흐름을 읽는 가장 정확한 시선, 가람부동산 테크니컬 리포트</p>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <main class="blog-list">
+            <!-- Admin Controls -->
+            <div class="admin-controls" id="admin-controls" style="display:none;">
+                <button class="btn-write" onclick="window.location.href='admin.html'">
+                    <i class="fa-solid fa-gear"></i> 관리자 대시보드 가기
+                </button>
+            </div>
+
+            <!-- Dynamic Posts Area -->
+            <div id="dynamic-posts"></div>
+            <!-- Post 1 -->
+            <article class="blog-post">
+                <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Market Trend">
+                <div class="post-content">
+                    <div class="post-meta">
+                        <span><i class="fa-solid fa-calendar"></i> 2024.03.20</span>
+                        <span><i class="fa-solid fa-user"></i> 김가람 대표</span>
+                        <span><i class="fa-solid fa-tag"></i> 시장 동향</span>
+                    </div>
+                    <h2 class="post-title">2024년 상반기 광주 부동산 시장 전망: 하이엔드 아파트의 가치</h2>
+                    <p class="post-excerpt">
+                        금리 변동성과 정책 변화 속에서 광주 부동산 시장은 양극화 현상이 더욱 뚜렷해지고 있습니다. 특히 봉선동과 상무지구를 중심으로 한 하이엔드 주거 단지들의 수요는 여전히 견고한 모습을 보이고 있는데...
+                    </p>
+                    <a href="blog-post-1.html" class="read-more">계속 읽기 <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </article>
+
+            <!-- Post 2 -->
+            <article class="blog-post">
+                <img src="https://images.unsplash.com/photo-1582408921715-18e7806367c1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Interior">
+                <div class="post-content">
+                    <div class="post-meta">
+                        <span><i class="fa-solid fa-calendar"></i> 2024.03.15</span>
+                        <span><i class="fa-solid fa-user"></i> 인테리어 팀</span>
+                        <span><i class="fa-solid fa-tag"></i> 디자인</span>
+                    </div>
+                    <h2 class="post-title">부동산 가치를 높이는 럭셔리 인테리어의 3가지 핵심 요소</h2>
+                    <p class="post-excerpt">
+                        단순한 거주 공간을 넘어 자산으로서의 가치를 증명하는 인테리어는 무엇이 다를까요? 호텔식 마감재, 히든 키친, 그리고 스마트 홈 시스템이 결합된 최신 트렌드를 소개합니다.
+                    </p>
+                    <a href="blog-post-2.html" class="read-more">계속 읽기 <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+            </article>
+        </main>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="widget">
+                <h4>카테고리</h4>
+                <ul class="category-list">
+                    <li>시장 분석 <span>(12)</span></li>
+                    <li>매물 가이드 <span>(8)</span></li>
+                    <li>투자 정보 <span>(15)</span></li>
+                    <li>인테리어 <span>(6)</span></li>
+                    <li>공지사항 <span>(3)</span></li>
+                </ul>
+            </div>
+
+            <div class="widget">
+                <h4>최신 게시글</h4>
+                <div class="recent-posts">
+                    <div class="recent-post-item">
+                        <img src="https://images.unsplash.com/photo-1448630360428-65ff2c0257ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Recent 1">
+                        <div class="recent-post-info">
+                            <h5>펜트하우스 투자의 모든 것</h5>
+                            <span>2024.03.18</span>
+                        </div>
+                    </div>
+                    <div class="recent-post-item">
+                        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="Recent 2">
+                        <div class="recent-post-info">
+                            <h5>광주 신규 분양 단지 분석</h5>
+                            <span>2024.03.12</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Footer (Same as index.html) -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4>가람부동산.</h4>
+                <p>광주광역시 최고의 하이엔드 부동산 중개 법인입니다. 당신의 품격에 어울리는 최상의 공간을 제안합니다.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <ul class="footer-links">
+                    <li><a href="index.html#hero">홈으로</a></li>
+                    <li><a href="index.html#featured">매물 보기</a></li>
+                    <li><a href="blog.html">블로그</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 GARAM Real Estate. All rights reserved. | <a href="admin-login.html" style="color: #475569; font-size: 12px;">Admin</a></p>
+        </div>
+    </footer>
+
+    <script>
+        // Post Management
+        const dynamicPostsContainer = document.getElementById('dynamic-posts');
+
+        // Load posts on startup
+        document.addEventListener('DOMContentLoaded', loadPosts);
+
+        function savePost(post) {
+            let posts = JSON.parse(localStorage.getItem('garam_posts') || '[]');
+            posts.unshift(post); // 새 글을 맨 위로
+            localStorage.setItem('garam_posts', JSON.stringify(posts));
+        }
+
+        function loadPosts() {
+            const posts = JSON.parse(localStorage.getItem('garam_posts') || '[]');
+            dynamicPostsContainer.innerHTML = '';
+            const isAdmin = sessionStorage.getItem('isAdmin') === 'true';
+
+            if(isAdmin) {
+                document.getElementById('admin-controls').style.display = 'flex';
+            }
+
+            posts.forEach(post => {
+                const deleteBtn = isAdmin ? `<button class="delete-btn" onclick="deletePost(${post.id})"><i class="fa-solid fa-trash"></i> 삭제</button>` : '';
+                const postHTML = `
+                    <article class="blog-post" id="post-${post.id}">
+                        <img src="${post.image}" alt="${post.title}">
+                        <div class="post-content">
+                            <div class="post-meta">
+                                <span><i class="fa-solid fa-calendar"></i> ${post.date}</span>
+                                <span><i class="fa-solid fa-user"></i> ${post.author}</span>
+                                <span><i class="fa-solid fa-tag"></i> ${post.category}</span>
+                            </div>
+                            <h2 class="post-title">${post.title}</h2>
+                            <p class="post-excerpt">${post.excerpt}</p>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <a href="blog-detail.html?id=${post.id}" class="read-more">계속 읽기 (본문 보기) <i class="fa-solid fa-arrow-right"></i></a>
+                                ${deleteBtn}
+                            </div>
+                        </div>
+                    </article>
+                `;
+                dynamicPostsContainer.innerHTML += postHTML;
+            });
+        }
+
+        function deletePost(id) {
+            if(confirm('정말로 이 포스트를 삭제하시겠습니까?')) {
+                let posts = JSON.parse(localStorage.getItem('garam_posts') || '[]');
+                posts = posts.filter(p => p.id !== id);
+                localStorage.setItem('garam_posts', JSON.stringify(posts));
+                loadPosts();
+            }
+        }
+    </script>
+</body>
+</html>
