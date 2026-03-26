@@ -432,8 +432,8 @@
                 await deleteDoc(doc(db, collectionName, docId));
                 renderLists();
             } catch (error) {
-                console.error(error);
-                alert('삭제 중 오류가 발생했습니다.');
+                console.error("Delete Error:", error);
+                alert('삭제 중 오류 발생: ' + error.message);
             }
         }
 
