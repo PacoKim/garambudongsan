@@ -993,34 +993,9 @@
                 <h2>부동산 인사이트</h2>
                 <p>가람부동산이 전해드리는 최신 시장 동향과 투자 가이드</p>
             </div>
-            <div class="blog-grid">
-                <article class="blog-card">
-                    <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Blog 1">
-                    <div class="blog-card-content">
-                        <span class="blog-category">시장 동향</span>
-                        <h3>2024년 광주 부동산 시장 전망</h3>
-                        <p>전문가들이 분석하는 올해 상반기 광주 지역 아파트 가격 흐름과 주요 변수들...</p>
-                        <a href="blog-post-1.html" class="blog-more">상세보기 <i class="fa-solid fa-arrow-right"></i></a>
-                    </div>
-                </article>
-                <article class="blog-card">
-                    <img src="https://images.unsplash.com/photo-1582408921715-18e7806367c1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Blog 2">
-                    <div class="blog-card-content">
-                        <span class="blog-category">인테리어</span>
-                        <h3>하이엔드 아파트의 필수 인테리어 트렌드</h3>
-                        <p>공간의 가치를 높이는 고급 자재 선정법부터 조명 설계까지, 전문가의 팁을 공개합니다.</p>
-                        <a href="blog-post-2.html" class="blog-more">상세보기 <i class="fa-solid fa-arrow-right"></i></a>
-                    </div>
-                </article>
-                <article class="blog-card">
-                    <img src="https://images.unsplash.com/photo-1448630360428-65ff2c0257ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Blog 3">
-                    <div class="blog-card-content">
-                        <span class="blog-category">투자 정보</span>
-                        <h3>실패 없는 펜트하우스 투자 가이드</h3>
-                        <p>희소성이 자산 가치가 되는 펜트하우스 선택 시 반드시 체크해야 할 5가지 요소...</p>
-                        <a href="blog-post-3.html" class="blog-more">상세보기 <i class="fa-solid fa-arrow-right"></i></a>
-                    </div>
-                </article>
+            <div id="blog-home-grid" class="blog-grid">
+                <!-- 최신 글 목록 (Firebase에서 실시간으로 불러옵니다) -->
+                <p style="grid-column: 1/-1; text-align: center; padding: 40px; color: #64748B;">최신 소식을 불러오고 있습니다...</p>
             </div>
         </section>
 
@@ -1114,35 +1089,8 @@
             }
         });
 
-        // Property Data (광주 핵심 매물 위주 - 기존 데이터 보존 용도)
-        const staticProperties = [
-            {
-                id: "static_1",
-                badge: '매매',
-                badgeColor: '#0F172A',
-                image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                price: '22억',
-                title: '봉선동 제일풍경채 엘리트파크',
-                address: '광주시 남구 봉선동',
-                beds: 4,
-                baths: 2,
-                area: '165㎡ (50평)',
-                description: '광주의 강남으로 불리는 봉선동의 랜드마크 아파트입니다.\n뛰어난 학군을 자랑하며 단지 내 최고급 커뮤니티 시설이 완비되어 있습니다.'
-            },
-            {
-                id: "static_2",
-                badge: '전세',
-                badgeColor: '#475569',
-                image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                price: '14억',
-                title: '상무지구 갤러리 303',
-                address: '광주시 서구 치평동',
-                beds: 4,
-                baths: 3,
-                area: '231㎡ (70평)',
-                description: '광주 최대 금융·상업 중심지 상무지구에 위치한 최고급 주상복합입니다.'
-            }
-        ];
+        // Property Data (기본 샘플 데이터 삭제 완료)
+        const staticProperties = [];
 
         let allProperties = []; // Firestore + Static
 
