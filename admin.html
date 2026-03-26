@@ -400,7 +400,10 @@
                         </div>
                     `;
                 });
-            } catch(e) { console.error(e); propList.innerHTML = '불러오기 실패'; }
+            } catch(e) { 
+                console.error("List Load Error:", e); 
+                propList.innerHTML = '불러오기 실패: ' + e.message; 
+            }
 
             // Render Blog
             const blogList = document.getElementById('blog-list');
