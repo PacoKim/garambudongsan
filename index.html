@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>가람부동산 | 광주 서구 전문 부동산</title>
+  <meta name="description" content="광주 서구 아파트, 분양권, 상가 매매/임대 전문 가람부동산입니다. 고객님의 소중한 자산을 정직과 신뢰로 중개해 드립니다.">
+  <meta name="keywords" content="가람부동산, 광주서구부동산, 광주부동산, 서구아파트매매, 서구상가, 광주부동산중개">
+
+  <!-- 오픈 그래프 (소셜 공유용) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="가람부동산 | 광주 서구 전문 부동산">
+  <meta property="og:description" content="정직과 신뢰로 보답하는 가람부동산. 광주 서구 매물 실시간 상담 가능!">
+  <meta property="og:image" content="https://pacokim.github.io/garambudongsan/images/og-image.jpg">
+  <meta property="og:url" content="https://pacokim.github.io/garambudongsan/">
+
+  <!-- 아이콘: FontAwesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- 스타일시트 -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ====== Navigation ====== -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar-inner">
+      <a href="#hero" class="nav-logo">가람부동산<span>.</span></a>
+      <div class="nav-links">
+        <a href="#featured" class="nav-link">추천매물</a>
+        <a href="#process" class="nav-link">중개과정</a>
+        <a href="#blog-home" class="nav-link">블로그</a>
+        <a href="#faq" class="nav-link">FAQ</a>
+      </div>
+      <a href="tel:010-7600-2104" class="nav-cta">📞 상담문의</a>
+      <button class="nav-mobile-toggle" id="mobileToggle" aria-label="메뉴 열기">
+        <div class="hamburger"><span></span><span></span><span></span></div>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ====== Mobile Menu ====== -->
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="mobile-close" id="mobileClose" aria-label="메뉴 닫기">✕</button>
+    <a href="#featured" onclick="closeMobile()">추천매물</a>
+    <a href="#process" onclick="closeMobile()">중개과정</a>
+    <a href="#blog-home" onclick="closeMobile()">블로그</a>
+    <a href="#faq" onclick="closeMobile()">FAQ</a>
+    <a href="tel:010-7600-2104" onclick="closeMobile()" class="btn btn-primary" style="margin-top:16px;">📞 전화 상담</a>
+  </div>
+
+  <!-- ====== Hero Section ====== -->
+  <section class="hero section" id="hero">
+    <div class="hero-bg-glow hero-bg-glow--gold"></div>
+    <div class="hero-bg-glow hero-bg-glow--navy"></div>
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="dot"></span>
+          광주 서구 전문 부동산
+        </div>
+        <p class="hero-subtitle">정직과 신뢰로 보답하는 가람부동산</p>
+        <h1 class="hero-title">
+          광주 서구<br>
+          <span class="highlight">맞춤 매물</span>을<br>
+          찾아드립니다
+        </h1>
+        <p class="hero-desc">
+          아파트, 주택, 상가, 토지까지 — 풍부한 경험을 바탕으로 
+          고객님께 꼭 맞는 최적의 매물을 제안해 드립니다.
+        </p>
+        <div class="hero-actions">
+          <a href="tel:010-7600-2104" class="btn btn-primary">
+            <i class="fa-solid fa-phone"></i>
+            무료 상담 신청
+          </a>
+          <a href="#featured" class="btn btn-secondary">
+            매물 보기
+            <i class="fa-solid fa-arrow-right"></i>
+          </a>
+        </div>
+
+        <!-- Search -->
+        <div class="search-container">
+          <div class="search-box-grid">
+            <div class="search-field">
+              <label>구</label>
+              <select id="gu-select" onchange="updateDongs()">
+                <option value="">구 선택</option>
+                <option value="북구">북구</option>
+                <option value="서구">서구</option>
+                <option value="남구">남구</option>
+                <option value="동구">동구</option>
+                <option value="광산구">광산구</option>
+              </select>
+            </div>
+            <div class="search-field">
+              <label>동</label>
+              <select id="dong-select">
+                <option value="">동 선택</option>
+              </select>
+            </div>
+            <div class="search-field">
+              <label>종류</label>
+              <select id="type-select">
+                <option value="">전체</option>
+                <option value="아파트">아파트</option>
+                <option value="주택">주택</option>
+                <option value="상가">상가</option>
+                <option value="토지">토지</option>
+                <option value="건물">건물</option>
+                <option value="분양권">분양권</option>
+              </select>
+            </div>
+            <button class="search-btn" onclick="document.getElementById('featured').scrollIntoView({behavior:'smooth'})">
+              <i class="fa-solid fa-magnifying-glass"></i> 검색
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-image-wrapper">
+          <img src="images/hero-apartment.png" alt="프리미엄 아파트 단지" loading="eager">
+        </div>
+        <div class="hero-image-glow"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== Ticker ====== -->
+  <div class="ticker-section">
+    <div class="ticker-track">
+      <span class="ticker-item">아파트</span>
+      <span class="ticker-separator">·</span>
+      <span class="ticker-item">주택</span>
+      <span class="ticker-separator">·</span>
+      <span class="ticker-item">상가</span>
+      <span class="ticker-separator">·</span>
+      <span class="ticker-item">토지</span>
+      <span class="ticker-separator">·</span>
+      <span class="ticker-item">건물</span>
+      <span class="ticker-separator">·</span>
+      <span class="ticker-item">분양권</span>
+      <span class="ticker-separator">·</span>
+      <span class="ticker-item">매매</span>
+      <span class="ticker-separator">·</span>
+      <span class="ticker-item">전세</span>
+      <span class="ticker-separator">·</span>
+      <span class="ticker-item">월세</span>
+      <span class="ticker-separator">·</span>
+      <!-- duplicated for seamless loop -->
+      <span class="ticker-item">아파트</span>
+      <span class="ticker-separator">·</span>
+      <span class="ticker-item">주택</span>
+      <span class="ticker-separator">·</span>
+      <span class="ticker-item">상가</span>
+      <span class="ticker-separator">·</span>
+      <span class="ticker-item">토지</span>
+      <span class="ticker-separator">·</span>
+      <span class="ticker-item">건물</span>
+      <span class="ticker-separator">·</span>
+      <span class="ticker-item">분양권</span>
+      <span class="ticker-separator">·</span>
+      <span class="ticker-item">매매</span>
+      <span class="ticker-separator">·</span>
+      <span class="ticker-item">전세</span>
+      <span class="ticker-separator">·</span>
+      <span class="ticker-item">월세</span>
+      <span class="ticker-separator">·</span>
+    </div>
+  </div>
+
+  <!-- ====== Stats Bar ====== -->
+  <section class="stats-bar" id="stats">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item reveal">
+          <div class="stat-number" data-target="10">0</div>
+          <div class="stat-label">년+ 전문 경력</div>
+        </div>
+        <div class="stat-item reveal reveal-delay-1">
+          <div class="stat-number" data-target="500">0</div>
+          <div class="stat-label">건+ 거래 완료</div>
+        </div>
+        <div class="stat-item reveal reveal-delay-2">
+          <div class="stat-number" data-target="99">0</div>
+          <div class="stat-label">% 고객 만족도</div>
+        </div>
+        <div class="stat-item reveal reveal-delay-3">
+          <div class="stat-number" data-target="24">0</div>
+          <div class="stat-label">시간 상담 가능</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== Featured Listings ====== -->
+  <section class="section" id="featured">
+    <div class="container">
+      <div class="reveal">
+        <span class="section-label">Properties</span>
+        <h2 class="section-title">광주 서구 추천 매물</h2>
+        <p class="section-desc">가람부동산이 직접 엄선한 광주 서구 지역의 좋은 매물을 소개합니다.</p>
+      </div>
+      <div class="property-grid" id="property-grid">
+        <p style="grid-column: 1/-1; text-align: center; padding: 60px 20px; color: rgba(0,0,0,0.35);">매물 정보를 불러오고 있습니다...</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== Process Section ====== -->
+  <section class="section" id="process" style="background: var(--bg-secondary);">
+    <div class="container">
+      <div class="reveal">
+        <span class="section-label">Process</span>
+        <h2 class="section-title">중개 과정</h2>
+        <p class="section-desc">체계적인 프로세스로 안심하고 거래하실 수 있습니다.</p>
+      </div>
+      <div class="process-timeline">
+        <div class="process-step reveal">
+          <div class="process-marker"><div class="number">01</div></div>
+          <div class="process-content">
+            <h3>상담 및 요구사항 파악</h3>
+            <p>전화 또는 방문 상담을 통해 고객님의 예산, 원하는 지역, 주거 조건 등을 세밀하게 파악합니다.</p>
+          </div>
+        </div>
+        <div class="process-step reveal reveal-delay-1">
+          <div class="process-marker"><div class="number">02</div></div>
+          <div class="process-content">
+            <h3>맞춤 매물 추천</h3>
+            <p>풍부한 매물 데이터와 경험을 바탕으로 고객님의 조건에 딱 맞는 매물을 선별하여 추천해 드립니다.</p>
+          </div>
+        </div>
+        <div class="process-step reveal reveal-delay-2">
+          <div class="process-marker"><div class="number">03</div></div>
+          <div class="process-content">
+            <h3>현장 방문 및 확인</h3>
+            <p>함께 매물을 직접 방문하여 상태를 꼼꼼히 확인합니다. 주변 환경, 교통, 학군 등 생활 정보도 안내드립니다.</p>
+          </div>
+        </div>
+        <div class="process-step reveal reveal-delay-3">
+          <div class="process-marker"><div class="number">04</div></div>
+          <div class="process-content">
+            <h3>안전한 계약 체결</h3>
+            <p>등기부등본 확인, 권리 분석 등 법적 사항을 꼼꼼하게 검토한 후 안전하게 계약을 진행합니다.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== Blog Section ====== -->
+  <section class="section" id="blog-home">
+    <div class="container">
+      <div class="reveal">
+        <span class="section-label">Blog</span>
+        <h2 class="section-title">부동산 인사이트</h2>
+        <p class="section-desc">가람부동산이 전해드리는 최신 시장 동향과 투자 가이드</p>
+      </div>
+      <div class="blog-grid" id="blog-home-grid">
+        <p style="grid-column: 1/-1; text-align: center; padding: 60px 20px; color: rgba(0,0,0,0.35);">최신 소식을 불러오고 있습니다...</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FAQ Section ====== -->
+  <section class="section" id="faq" style="background: var(--bg-secondary);">
+    <div class="container">
+      <div class="reveal">
+        <span class="section-label">FAQ</span>
+        <h2 class="section-title">자주 묻는 질문</h2>
+        <p class="section-desc">궁금하신 점을 미리 확인하세요.</p>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item reveal">
+          <button class="faq-question">
+            중개 수수료는 어떻게 되나요?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">중개 수수료는 거래 유형과 금액에 따라 법정 요율이 적용됩니다. 매매의 경우 거래가의 0.4~0.9%, 임대의 경우 0.3~0.8% 이내입니다. 정확한 수수료는 상담 시 투명하게 안내드립니다.</div>
+          </div>
+        </div>
+        <div class="faq-item reveal reveal-delay-1">
+          <button class="faq-question">
+            매물 방문은 어떻게 예약하나요?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">전화(010-7600-2104)로 원하시는 매물과 방문 일시를 말씀해 주시면 됩니다. 당일 예약도 가능하며, 주말 및 공휴일에도 사전 예약 시 방문이 가능합니다.</div>
+          </div>
+        </div>
+        <div class="faq-item reveal reveal-delay-2">
+          <button class="faq-question">
+            전세 사기를 예방하려면 어떻게 해야 하나요?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">가람부동산은 모든 전세 거래 시 등기부등본 확인, 선순위 권리 분석, 전입신고 안내 등을 철저히 진행합니다. 전세보증보험 가입도 도와드리며, 안전한 거래를 최우선으로 합니다.</div>
+          </div>
+        </div>
+        <div class="faq-item reveal reveal-delay-3">
+          <button class="faq-question">
+            급매물이나 신규 매물 알림을 받을 수 있나요?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">네, 원하시는 조건(지역, 가격대, 유형)을 알려주시면 조건에 맞는 신규 매물이 등록될 때 바로 연락드립니다. 전화 또는 카카오톡으로 실시간 알림을 받으실 수 있습니다.</div>
+          </div>
+        </div>
+        <div class="faq-item reveal reveal-delay-4">
+          <button class="faq-question">
+            매도(집 팔기)도 의뢰할 수 있나요?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            <div class="faq-answer-inner">물론입니다. 매도 의뢰 시 적정 시세 분석, 매물 사진 촬영, 온라인 홍보까지 체계적으로 진행하여 최적의 가격에 빠르게 거래될 수 있도록 도와드립니다.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CTA Section ====== -->
+  <section class="cta-section" id="contact">
+    <div class="container">
+      <div class="cta-card reveal">
+        <div class="cta-glow cta-glow--1"></div>
+        <div class="cta-glow cta-glow--2"></div>
+        <h2 class="cta-title">부동산 관련 고민이 있으신가요?</h2>
+        <p class="cta-desc">지금 바로 상담하세요. 경험 많은 전문가가 친절하게 안내드립니다.</p>
+        <div class="cta-actions">
+          <a href="tel:010-7600-2104" class="btn btn-gold">
+            <i class="fa-solid fa-phone"></i>
+            전화 상담하기
+          </a>
+          <a href="#" class="btn btn-secondary" style="border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.7);">
+            💬 카카오톡 문의
+          </a>
+        </div>
+        <div class="cta-phone">📞 010-7600-2104</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== Footer ====== -->
+  <footer class="footer" id="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#hero" class="nav-logo" style="font-size:1.25rem; display:inline-block; color: white;">가람부동산<span style="color: #D4AF37;">.</span></a>
+          <p>광주 서구 부동산의 믿을 수 있는 파트너, 가람부동산. 고객님께 꼭 맞는 매물을 찾아드리겠습니다.</p>
+        </div>
+        <div class="footer-col">
+          <h4>매물 종류</h4>
+          <a href="#featured">아파트</a>
+          <a href="#featured">주택</a>
+          <a href="#featured">상가</a>
+          <a href="#featured">토지 / 건물</a>
+          <a href="#featured">분양권</a>
+        </div>
+        <div class="footer-col">
+          <h4>정보</h4>
+          <a href="#process">중개 과정</a>
+          <a href="#blog-home">블로그</a>
+          <a href="#faq">자주 묻는 질문</a>
+          <a href="blog.html">블로그 전체보기</a>
+        </div>
+        <div class="footer-col">
+          <h4>연락처</h4>
+          <a href="tel:010-7600-2104">📞 010-7600-2104</a>
+          <a href="#">💬 카카오톡 상담</a>
+          <a href="#">📍 광주광역시 서구 농성동 8번지 2층</a>
+          <a href="#" style="margin-top:12px; font-size:0.75rem; color: rgba(255,255,255,0.2);">운영시간: 평일 09:00 - 18:00</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 가람부동산. All rights reserved. | <a href="admin-login.html" style="color: rgba(255,255,255,0.3);">Admin</a></span>
+        <span>사업자등록번호: 000-00-00000</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ====== Floating CTA ====== -->
+  <a href="tel:010-7600-2104" class="floating-cta" id="floatingCta">
+    <i class="fa-solid fa-phone"></i>
+    전화 상담
+  </a>
+
+  <!-- ====== Property Modal ====== -->
+  <div class="modal-overlay" id="property-modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <img src="" alt="매물 사진" class="modal-img" id="modal-img">
+      <div class="modal-body">
+        <span class="modal-badge" id="modal-badge">매매</span>
+        <h2 class="modal-title" id="modal-title">매물 제목</h2>
+        <p class="modal-address" id="modal-address"><i class="fa-solid fa-location-dot"></i> 주소</p>
+        <div class="modal-price-section">
+          <span class="modal-price-label" id="modal-price-type">매매가</span>
+          <span class="modal-price-value" id="modal-price">가격</span>
+        </div>
+        <div class="modal-specs">
+          <div class="modal-spec-item">
+            <div class="spec-value" id="modal-beds">-</div>
+            <div class="spec-label">방</div>
+          </div>
+          <div class="modal-spec-item">
+            <div class="spec-value" id="modal-baths">-</div>
+            <div class="spec-label">욕실</div>
+          </div>
+          <div class="modal-spec-item">
+            <div class="spec-value" id="modal-area">-</div>
+            <div class="spec-label">면적</div>
+          </div>
+        </div>
+        <div class="modal-desc-section">
+          <h4>상세 설명</h4>
+          <p id="modal-desc">상세 설명 내용이 여기에 들어갑니다.</p>
+        </div>
+        <div class="modal-actions">
+          <a href="tel:010-7600-2104" class="btn btn-primary">
+            <i class="fa-solid fa-phone"></i> 담당자 전화연결
+          </a>
+          <button class="btn btn-secondary" onclick="closeModal()">
+            <i class="fa-solid fa-xmark"></i> 닫기
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== Scripts ====== -->
+  <script src="script.js"></script>
+
+  <!-- Firebase SDK -->
+  <script type="importmap">
+  {
+    "imports": {
+      "firebase/app": "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js",
+      "firebase/firestore": "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"
+    }
+  }
+  </script>
+
+  <script type="module">
+    import { initializeApp } from "firebase/app";
+    import { getFirestore, collection, getDocs, query, orderBy, limit } from "firebase/firestore";
+
+    // Firebase 설정
+    const firebaseConfig = {
+      apiKey: "AIzaSyC4bxl2efr-a2qlCv9zclP-kaL106Bpvxc",
+      authDomain: "garambudongsan.firebaseapp.com",
+      projectId: "garambudongsan",
+      storageBucket: "garambudongsan.firebasestorage.app",
+      messagingSenderId: "610338625520",
+      appId: "1:610338625520:web:7c113deb9334a302b62f35"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // 구/동 선택 로직
+    const dongData = {
+      "동구": ["전체", "충장동", "동명동", "계림동", "산수동", "지산동", "서남동", "학동", "학운동", "지원동"],
+      "서구": ["전체", "양동", "농성동", "광천동", "유덕동", "치평동", "상무동", "화정동", "서창동", "금호동", "풍암동", "동천동"],
+      "남구": ["전체", "양림동", "방림동", "봉선동", "사직동", "월산동", "백운동", "주월동", "효덕동", "송암동", "대촌동"],
+      "북구": ["전체", "중흥동", "중앙동", "임동", "신안동", "용봉동", "운암동", "동림동", "우산동", "풍향동", "문화동", "문흥동", "두암동", "삼각동", "일곡동", "매곡동", "오치동", "건국동", "양산동", "신용동"],
+      "광산구": ["전체", "송정동", "도산동", "신흥동", "어룡동", "우산동", "월곡동", "비아동", "첨단동", "신가동", "운남동", "수완동", "하남동", "임곡동", "동곡동", "평동", "삼도동", "본량동"]
+    };
+
+    window.updateDongs = function() {
+      const guSelect = document.getElementById('gu-select');
+      const dongSelect = document.getElementById('dong-select');
+      const selectedGu = guSelect.value;
+      dongSelect.innerHTML = '<option value="">동 선택</option>';
+      if (selectedGu && dongData[selectedGu]) {
+        dongData[selectedGu].forEach(dong => {
+          const option = document.createElement('option');
+          option.value = dong;
+          option.innerText = dong;
+          dongSelect.appendChild(option);
+        });
+      }
+    }
+
+    // Property Data
+    const staticProperties = [];
+    let allProperties = [];
+
+    const grid = document.getElementById('property-grid');
+
+    async function loadAllContent() {
+      // 1. 매물 불러오기
+      try {
+        const propQuery = query(collection(db, "properties"), orderBy("createdAt", "desc"));
+        const propSnap = await getDocs(propQuery);
+        const cloudProperties = [];
+        propSnap.forEach(doc => {
+          cloudProperties.push({ ...doc.data(), id: doc.id });
+        });
+        allProperties = [...cloudProperties, ...staticProperties];
+        renderGrid(allProperties);
+      } catch (e) {
+        console.error("Properties load error:", e);
+        renderGrid(staticProperties);
+      }
+      // 2. 블로그
+      renderRecentPosts();
+    }
+
+    function renderGrid(props) {
+      grid.innerHTML = '';
+      if (props.length === 0) {
+        grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; padding:60px 20px; color:rgba(0,0,0,0.35);">등록된 매물이 없습니다. 관리자 페이지에서 매물을 등록해 주세요.</p>';
+        return;
+      }
+      props.forEach(prop => {
+        const addressHTML = prop.address ? `<p class="card-address"><i class="fa-solid fa-location-dot"></i> ${prop.address}</p>` : '';
+        const cardHTML = `
+          <div class="property-card reveal" onclick="openModal('${prop.id}')">
+            <div class="card-badge" style="background-color: ${prop.badgeColor || '#0F172A'}">${prop.badge}</div>
+            <div class="card-img-wrapper">
+              <img src="${prop.image}" alt="${prop.title}" onerror="this.src='images/apartment-default.png'">
+            </div>
+            <div class="card-body">
+              <div class="card-price">${prop.price}</div>
+              <h3 class="card-title">${prop.title}</h3>
+              ${addressHTML}
+              <div class="card-features">
+                <span><i class="fa-solid fa-bed"></i> 방 ${prop.beds}개</span>
+                <span><i class="fa-solid fa-bath"></i> 욕실 ${prop.baths}개</span>
+                <span><i class="fa-solid fa-ruler-combined"></i> ${prop.area}</span>
+              </div>
+            </div>
+          </div>
+        `;
+        grid.innerHTML += cardHTML;
+      });
+      // Re-init reveal for dynamically added cards
+      document.querySelectorAll('.property-card.reveal').forEach(el => {
+        const obs = new IntersectionObserver((entries) => {
+          entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
+        obs.observe(el);
+      });
+    }
+
+    async function renderRecentPosts() {
+      const blogGrid = document.getElementById('blog-home-grid');
+      if (!blogGrid) return;
+      try {
+        const blogQuery = query(collection(db, "posts"), orderBy("createdAt", "desc"), limit(3));
+        const blogSnap = await getDocs(blogQuery);
+        if (!blogSnap.empty) {
+          blogGrid.innerHTML = '';
+          blogSnap.forEach(fbDoc => {
+            const p = fbDoc.data();
+            blogGrid.innerHTML += `
+              <article class="blog-card reveal">
+                <img src="${p.image}" alt="${p.title}" onerror="this.src='images/apartment-default.png'">
+                <div class="blog-card-content">
+                  <span class="blog-category">${p.category}</span>
+                  <h3>${p.title}</h3>
+                  <p>${p.excerpt}</p>
+                  <a href="blog-detail.html?fbid=${fbDoc.id}" class="blog-more">상세보기 <i class="fa-solid fa-arrow-right"></i></a>
+                </div>
+              </article>
+            `;
+          });
+          // Re-init reveal
+          document.querySelectorAll('.blog-card.reveal').forEach(el => {
+            const obs = new IntersectionObserver((entries) => {
+              entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+            }, { threshold: 0.1 });
+            obs.observe(el);
+          });
+        }
+      } catch(e) { console.error("Recent posts load error:", e); }
+    }
+
+    // Modal Logic
+    const modal = document.getElementById('property-modal');
+
+    window.openModal = function(id) {
+      const prop = allProperties.find(p => p.id === id);
+      if (prop) {
+        document.getElementById('modal-img').src = prop.image;
+        document.getElementById('modal-badge').innerText = prop.badge;
+        document.getElementById('modal-badge').style.backgroundColor = prop.badgeColor || '#0F172A';
+        document.getElementById('modal-title').innerText = prop.title;
+        document.getElementById('modal-address').innerHTML = '<i class="fa-solid fa-location-dot"></i> ' + (prop.address || '정보 없음');
+        document.getElementById('modal-price').innerText = prop.price;
+        document.getElementById('modal-price-type').innerText = prop.badge.includes('전세') ? '전세가' : '매매가';
+        document.getElementById('modal-beds').innerText = prop.beds;
+        document.getElementById('modal-baths').innerText = prop.baths;
+        document.getElementById('modal-area').innerText = prop.area;
+        document.getElementById('modal-desc').innerText = prop.description || '';
+        modal.classList.add('active');
+        document.body.classList.add('modal-open');
+      }
+    }
+
+    window.closeModal = function() {
+      modal.classList.remove('active');
+      document.body.classList.remove('modal-open');
+    }
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) window.closeModal();
+    });
+
+    // Start
+    loadAllContent();
+  </script>
+
+</body>
+</html>
