@@ -9,7 +9,49 @@ document.addEventListener('DOMContentLoaded', () => {
   initFAQ();
   initCountUp();
   initFloatingCta();
+  initTheme();
 });
+
+/* --- Theme Toggle --- */
+function initTheme() {
+  const themeToggle = document.getElementById('themeToggle');
+  const mobileThemeToggle = document.getElementById('mobileThemeToggle');
+  const body = document.body;
+  
+  // Check for saved theme
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {
+    body.classList.add('dark-theme');
+    updateThemeIcons(true);
+  }
+
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => toggleTheme());
+  }
+  if (mobileThemeToggle) {
+    mobileThemeToggle.addEventListener('click', () => toggleTheme());
+  }
+}
+
+function toggleTheme() {
+  const body = document.body;
+  const isDark = body.classList.toggle('dark-theme');
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  updateThemeIcons(isDark);
+}
+
+function updateThemeIcons(isDark) {
+  const icons = document.querySelectorAll('#themeToggle i, #mobileThemeToggle i');
+  icons.forEach(icon => {
+    if (isDark) {
+      icon.classList.remove('fa-moon');
+      icon.classList.add('fa-sun');
+    } else {
+      icon.classList.remove('fa-sun');
+      icon.classList.add('fa-moon');
+    }
+  });
+}
 
 /* --- Scroll Reveal --- */
 function initScrollReveal() {
@@ -27,20 +69,24 @@ function initScrollReveal() {
 /* --- Navbar Scroll Effect --- */
 function initNavbar() {
   const navbar = document.getElementById('navbar');
+  const navbarInner = navbar.querySelector('.navbar-inner');
+  
   window.addEventListener('scroll', () => {
     if (window.scrollY > 100) {
-      navbar.querySelector('.navbar-inner').style.background = 'rgba(255, 255, 255, 0.95)';
-      navbar.querySelector('.navbar-inner').style.boxShadow = '0 4px 30px rgba(0,0,0,0.1)';
+      navbarInner.style.background = 'var(--bg-glass-hover)';
+      navbarInner.style.boxShadow = '0 4px 30px rgba(0,0,0,0.15)';
     } else {
-      navbar.querySelector('.navbar-inner').style.background = 'rgba(255, 255, 255, 0.75)';
-      navbar.querySelector('.navbar-inner').style.boxShadow = '0 4px 30px rgba(0,0,0,0.08)';
+      navbarInner.style.background = 'var(--bg-glass)';
+      navbarInner.style.boxShadow = '0 4px 30px rgba(0,0,0,0.08)';
     }
   }, { passive: true });
 
   // Smooth scroll for nav links
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
-      const target = document.querySelector(this.getAttribute('href'));
+      const href = this.getAttribute('href');
+      if (href === '#') return;
+      const target = document.querySelector(href);
       if (target) {
         e.preventDefault();
         const offset = 80;
